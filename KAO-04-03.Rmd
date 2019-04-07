@@ -1,0 +1,166 @@
+---
+title: "Untitled"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+exData2 <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/exData2.csv")
+currency <- exData2$幣別
+```
+
+```{r}
+head(currency)
+```
+
+```{r}
+class(currency)
+```
+
+```{r}
+currency <- as.factor(currency)
+class(currency)
+```
+
+#幾種匯率
+```{r}
+levels(currency)
+```
+
+#計算向量長度 length()
+```{r}
+length(levels(currency))
+```
+
+#多少筆日圓資料
+```{r}
+sum(currency == "日圓JPY/USD")
+```
+
+#5.4
+```{r}
+x5 <- c("台北市","新北市","高雄市")
+greatTaipei <- c("台北市","新北市")
+
+x5 %in% greatTaipei
+!(x5 %in% greatTaipei)
+```
+
+```{r}
+y5 <- c("女","男","女")
+
+y5=="女"
+!(y5=="女")
+```
+
+```{r}
+(x5 %in% greatTaipei) & (y5=="女")
+```
+> & : 同時為真
+
+#向量中第幾筆為真:which() 
+```{r}
+which((x5 %in% greatTaipei) & (y5=="女"))
+```
+
+```{r}
+(x5 %in% greatTaipei) | (y5=="女")
+```
+> | or : 其中一個為真即為真
+
+```{r}
+which((x5 %in% greatTaipei) | (y5=="女"))
+```
+
+```{r}
+xor(x5 %in% greatTaipei, y5=="女")
+```
+> xor() : 其中一個為真
+
+```{r}
+which(xor(x5 %in% greatTaipei, y5=="女"))
+```
+
+
+```{r}
+library(readr)
+exData2 <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/exData2.csv")
+date <- as.character(exData2$期間)
+currency <- exData2$幣別
+exchangeRate <- exData2$匯率
+```
+
+```{r}
+class(date)
+```
+
+```{r}
+head(date)
+```
+
+```{r}
+library(lubridate)
+date <- ymd(date)
+```
+
+```{r}
+class(date)
+```
+
+```{r}
+isAfter19800801 <- 
+  date >= ymd("1980-08-01")
+isAfter19800801
+```
+
+```{r}
+head(as.integer(date))  #可看出前六筆date的內容
+as.integer(ymd("1980-08-01"))
+head(date >= ymd("1980-08-01"))
+#date 是否比1980-08-01大
+```
+
+```{r}
+class(isAfter19800801)
+```
+
+```{r}
+sum(isAfter19800801)
+```
+
+```{r}
+sum(currency == "歐元USD/EUR")
+```
+
+```{r}
+isExchangeRateNA <-
+  is.na(exchangeRate)
+```
+
+```{r}
+sum(isExchangeRateNA)
+```
+
+```{r}
+sum((currency == "歐元USD/EUR") &
+      !(isExchangeRateNA))
+```
+
+```{r}
+isNotNA <- !is.na(exchangeRate)
+isEuro <- currency == "歐元USD/EUR"
+```
+
+```{r}
+satisfyBoth <- isNotNA & isEuro 
+sum(satisfyBoth)
+```
+
+
+
+
+

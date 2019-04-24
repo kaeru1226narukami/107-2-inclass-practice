@@ -33,6 +33,92 @@ MAT2[[2]]
 MAT2[c(T,F,F,T)]
 ```
 
+```{r}
+StuList <- list(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50)
+  )
+StuList 
+```
+
+```{r}
+StuDF <- data.frame(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50)
+  )
+StuDF 
+```
+
+```{r}
+StuDF[[2]][[3]]
+```
+
+```{r}
+class(StuDF$姓名)
+```
+
+```{r}
+StuDF$姓名 <- as.character(StuDF$姓名)
+class(StuDF$姓名)
+```
+
+```{r}
+StuDF2 <- data.frame(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50),
+  stringsAsFactors = FALSE
+  )
+StuDF2 
+```
+
+```{r}
+chosenLETTERS <- LETTERS[1:15]
+matObj1 <- matrix(chosenLETTERS,5,3)
+matObj1
+```
+
+```{r}
+matObj1 <-matrix(chosenLETTERS,5,3)
+matObj1 
+matObj11 <-matrix(chosenLETTERS,3,5)
+matObj11
+tolower(matObj11) #轉成小寫
+toupper(m) # 轉成大寫
+```
+
+```{r}
+matObj1[3,2]
+```
+
+```{r}
+matObj1
+matObj1[c(1,4),c(2,3)]
+```
+
+```{r}
+matObj1[c(T,F,F,T,F),c(F,T,T)]
+```
+
+```{r}
+library(readr)
+classSurvey <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/classSurvey.csv")
+```
+
+```{r}
+class(classSurvey)
+```
+
+```{r}
+classSurvey[c(1:60),c(4,5)] #取性別&學分數
+```
+
+```{r}
+classSurvey[[4]] == "女"
+```
+
 
 
 

@@ -1,0 +1,137 @@
+---
+title: '0522'
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+```{r}
+library(readr)
+invoiceList <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/invoiceList.csv",
+col_types = cols(訂單時間.以訂單時區顯示. = col_character()))
+names(invoiceList)[[2]] <- "訂單時區之下單時間"
+```
+
+```{r}
+(invoiceList$訂單時區 == "America/New_York") -> nyLogical
+(invoiceList$訂單時區 == "Asia/Taipei") -> tpLogical
+
+invoiceList$nyLogical <- nyLogical
+invoiceList$tpLogical <- tpLogical
+
+library(lubridate)
+ymd_hms(invoiceList$訂單時區之下單時間[nyLogical],
+        tz="America/New_York") -> nyDateTime
+
+invoiceList$UTC時間[nyLogical] <- with_tz(nyDateTime,tz="UTC")
+
+ymd_hms(invoiceList$訂單時區之下單時間[tpLogical],
+        tz="Asia/Taipei") -> tpDateTime
+
+invoiceList$UTC時間[tpLogical] <- with_tz(tpDateTime,tz="UTC")
+
+invoiceList
+```
+
+```{r}
+library(readr)
+transcriptDataFinal <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/transcriptDataFinal.csv")
+```
+
+```{r}
+gpa_fun <- function(studentID){
+  transcriptDataFinal$學號==studentID -> logiChosenStudent
+  
+  subSample <- transcriptDataFinal[logiChosenStudent,]
+  
+  sum(subSample$學期成績*subSample$學分數)/
+    sum(subSample$學分數) -> GPA
+  return(GPA)
+}
+```
+
+```{r}
+gpa_fun("479W9ee8e")
+gpa_fun("9efW9aea5")
+```
+
+請把以America/New_York時區輸入的時間字串"1973-02-21 12:05:22"，轉成date time class, 再改成Asia/Taipei時間顯示。
+```{r}
+ymd_hms("1973-02-21 12:05:22",tz="America/New_York") ->
+  fromDateTime
+with_tz(fromDateTime,tzone="Asia/Taipei") -> TWDateTime
+TWDateTime
+```
+
+```{r}
+ymd_hms_tzChange <- function(input,fromTzone,toTzone){
+  time1 <- ymd_hms(input,tz=fromTzone)
+  answer <- with_tz(time1,tzone = toTzone)
+  return(answer)
+}
+ymd_hms_tzChange("1973-02-21 12:05:22","America/New_York","Asia/Taipei")
+
+```
+
+```{r}
+library(stringr)
+sample(99:103,15,replace = T)-> yy
+sample(1:12,15,replace=T)-> mm
+str_c("民國",str_pad(yy,3,"left","0"),"年",mm,"月") -> twDates
+twDates
+```
+
+```{r}
+library(stringr); library(lubridate)
+yyyy<-as.integer(str_extract(twDates,"(?<=(民國))[:digit:]+"))+1911
+mm<-str_extract(twDates,"[:digit:]+(?=月)")
+yyyymmdd <- ymd(str_c(yyyy,mm,"01",sep="-"))
+```
+
+```{r}
+date_convert_twYM <- function(twDates){
+ yyyy<-as.integer(str_extract(twDates,"(?<=(民國))[:digit:]+"))+1911
+ mm<-str_extract(twDates,"[:digit:]+(?=月)")
+ yyyymmdd <- ymd(str_c(yyyy,mm,"01",sep="-"))
+ return(yymmdd)
+}
+date_convert_twYM
+```
+
+```{r}
+date_convert_twYM<- function(x){
+  library(stringr); library(lubridate)
+  yyyy <-as.integer(str_extract(x,"(?<=(民國))[:digit:]+"))+1911
+  mm <-str_extract(x,"[:digit:]+(?=月)")
+  yyyymmdd <- ymd(str_c(yyyy,mm,"01",sep="-"))
+  ans <- ymd(yyyymmdd)
+  return(ans)
+}
+date_convert_twYM
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

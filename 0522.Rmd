@@ -57,7 +57,7 @@ gpa_fun("479W9ee8e")
 gpa_fun("9efW9aea5")
 ```
 
-請把以America/New_York時區輸入的時間字串"1973-02-21 12:05:22"，轉成date time class, 再改成Asia/Taipei時間顯示。
+#把以America/New_York時區輸入的時間字串"1973-02-21 12:05:22"，轉成date time class, 再改成Asia/Taipei時間顯示。
 ```{r}
 ymd_hms("1973-02-21 12:05:22",tz="America/New_York") ->
   fromDateTime
@@ -71,8 +71,8 @@ ymd_hms_tzChange <- function(input,fromTzone,toTzone){
   answer <- with_tz(time1,tzone = toTzone)
   return(answer)
 }
-ymd_hms_tzChange("1973-02-21 12:05:22","America/New_York","Asia/Taipei")
 
+ymd_hms_tzChange("1973-02-21 12:05:22","America/New_York","Asia/Taipei")
 ```
 
 ```{r}
@@ -83,12 +83,27 @@ str_c("民國",str_pad(yy,3,"left","0"),"年",mm,"月") -> twDates
 twDates
 ```
 
+#(?<=(民國)):前面是民國
+#[:digit:]+ :取出數字們
+   =>取出前面是民國的數字
+#(?=月):後面是月
 ```{r}
 library(stringr); library(lubridate)
 yyyy<-as.integer(str_extract(twDates,"(?<=(民國))[:digit:]+"))+1911
 mm<-str_extract(twDates,"[:digit:]+(?=月)")
 yyyymmdd <- ymd(str_c(yyyy,mm,"01",sep="-"))
 ```
+
+```{r}
+date_convert_twYM <- function(twDates){
+ yyyy<-as.integer(str_extract(twDates,"(?<=(民國))[:digit:]+"))+1911
+mm<-str_extract(twDates,"[:digit:]+(?=月)")
+yyyymmdd <- ymd(str_c(yyyy,mm,"01",sep="-"))
+  return(yyyymmdd) 
+}
+date_convert_twYM
+```
+
 
 ```{r}
 date_convert_twYM <- function(twDates){
@@ -111,6 +126,288 @@ date_convert_twYM<- function(x){
 }
 date_convert_twYM
 ```
+
+#CHAPTER6
+```{r}
+Mat1 <- matrix(
+  c(1:6), 2,3 
+)               #產生2X3的矩陣
+Mat1
+```
+
+```{r}
+class(Mat1)
+typeof(Mat1) 
+```
+
+```{r}
+Mat1[[2]]
+```
+
+```{r}
+Mat2 <- matrix(
+  c("a","b","c","d"), 2, 2
+)
+Mat2
+```
+
+```{r}
+Mat2[[1]]
+Mat2[[4]]
+Mat2[c(T,F,F,T)]
+```
+
+## data frame
+```{r}
+StuList <- list(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50)
+  )
+StuList 
+```
+
+#R 還是將data.frame 視為list,視覺上是matrix
+```{r}
+StuDF <- data.frame(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50)
+  )
+StuDF 
+```
+
+```{r}
+class(StuDF)
+typeof(StuDF)
+```
+
+```{r}
+StuDF$姓名[3]
+StuDF[[2]][[3]]
+```
+
+```{r}
+StuDF2 <- data.frame(
+  學號=c(172,214,322,425,517),
+  姓名=c("小明","大雄","胖虎","小新","大白"),
+  成績=c(80,60,90,70,50),
+  stringsAsFactors = FALSE   #不將character轉成factor
+  )
+StuDF2 
+```
+
+```{r}
+LETTERS # R內設元素值為英文字母群的character vector
+chosenLETTERS <- LETTERS[1:15]
+matObj1 <- matrix(chosenLETTERS,5,3)
+matObj1
+```
+
+```{r}
+tolower(matObj1)
+toupper(matObj1)
+```
+
+```{r}
+matObj1[[8]]
+matObj1[3,2]
+matObj1[c(1,4),c(2,3)] #1,4 rows+2,3 colums
+matObj1[c(T,F,F,T,F),c(F,T,T)]
+```
+
+```{r}
+library(readr)
+classSurvey <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/classSurvey.csv")
+```
+
+```{r}
+classSurvey[,c(4,5)]
+```
+
+```{r}
+logi <- classSurvey[4] == "女"
+classSurvey[logi,]
+```
+
+#colnames()/rownames()
+```{r}
+colnames(StuDF2)
+names(StuDF2)
+```
+
+```{r}
+colnames(StuDF2) <- c("ONE","TWO","THREE")
+colnames(StuDF2)
+StuDF2
+```
+
+```{r}
+colnames(StuDF2)[[2]] <- c("姓名")
+StuDF2
+```
+
+```{r}
+rownames(StuDF2)
+rownames(StuDF2) <- str_c("第",1:5,"筆")
+rownames(StuDF2)
+```
+
+```{r}
+a <- c("1","b","TRUE")
+a
+a[[2]] <- "c" # 元素存在
+a[[5]] <- "7" # 元素不存在
+a
+```
+
+```{r}
+b <- list(
+  元素1=1,
+  元素2="Hello",
+  元素3=TRUE
+)
+```
+
+```{r}
+b[[3]] <- "FALSE"
+b[[5]] <- "7"
+b
+```
+
+```{r}
+names(b)
+b[["新元素A"]] <-c(1,2,3)
+b$新元素B <- c(T,F,T)
+b
+```
+
+```{r}
+library(readr)
+exData3 <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/exData3.csv",
+                    col_types = cols(
+                      匯率 = col_number(),
+                      期間 = col_character()))
+```
+
+#轉成data class
+```{r}
+exData3$期間 <- ymd(exData3$期間) 
+class(exData3$期間 )
+```
+#增加一個logical變數
+```{r}
+exData3$isAsiaCrisis <- ymd("1997-06-01") <= exData3$期間 &
+  exData3$期間 <= ymd("1998-12-01")
+isAsiaCrisis
+```
+
+```{r}
+exData3[exData3$isAsiaCrisis,]
+```
+
+```{r}
+library(readr)
+transcriptDataFinal <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/transcriptDataFinal.csv") 
+```
+
+```{r}
+transcriptDataFinal$學號 == "92aS67fee" -> YES
+subsample <- transcriptDataFinal[YES,]
+```
+
+```{r}
+gpa_fun <- function(studentID){
+  transcriptDataFinal$學號 == studentID -> 
+    YES
+subsample <- transcriptDataFinal[YES,]
+
+ GPA <- sum(subsample$學期成績*subsample$學分數)/
+  sum(subsample$學分數) 
+  return(GPA)
+}
+```
+
+```{r}
+gpa_fun("92aS67fee")
+```
+
+
+```{r}
+utility_cobb_douglass <- function(x,y,.alpha,.beta){
+  utilValue <- x^.alpha*y^.beta # 程序產生output值
+  return(utilValue) # 傳回output值
+}
+```
+```{r}
+utility_cobb_douglass(1,2,0.5,0.8)
+```
+
+```{r}
+FUN <- function(alpha,X){
+  FFF <- alpha+X
+  return(FFF)
+}
+FUN(1,2)
+```
+
+```{r}
+supply_fun <- function(a,b,P){
+  Qs <- a+b*P
+  return(Qs)
+}
+demand_fun <- function(c,d,P){
+  Qd <- c-d*P
+  return(Qd)
+}
+```
+
+```{r}
+supply_fun(0,1,1)
+demand_fun(5,1,1)
+```
+
+```{r}
+library(readr)
+invoiceList <- read_csv("https://raw.githubusercontent.com/tpemartin/github-data/master/invoiceList.csv",
+col_types = cols(訂單時間.以訂單時區顯示. = col_character()))
+names(invoiceList)[[2]] <- "訂單時區之下單時間"
+```
+
+```{r}
+library(stringr)
+sample(99:103,15,replace = T)-> yy
+sample(1:12,15,replace=T)-> mm
+str_c("民國",str_pad(yy,3,"left","0"),"年",mm,"月") -> twDates
+twDates
+```
+
+#預設值(alpha,beta)
+```{r}
+utility_cobb_douglass2 <- function(x,y,.alpha=0.5,.beta=0.5){
+  utilValue <- x^.alpha*y^.beta
+  return(utilValue)
+}
+utility_cobb_douglass2(1,2) # 使用預設值
+utility_cobb_douglass2(1,2,0.5,0.8) # 自定參數值
+```
+
+```{r}
+date_convert_twYM <- function(twDates,dd="01"){
+  yyyy<-as.integer(str_extract(twDates,"(?<=(民國))[:digit:]+"))+1911
+mm<-str_extract(twDates,"[:digit:]+(?=月)")
+yyyymmdd <- ymd(str_c(yyyy,mm,dd,sep="-"))
+  return(yyyymmdd) 
+}
+date_convert_twYM(twDates)
+date_convert_twYM(twDates,dd="04")
+```
+
+
+
+
+
+
 
 
 
